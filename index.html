@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Realtime Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #chat-container {
+      width: 400px;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    #messages {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #444;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .msg {
+      margin-bottom: 10px;
+      padding: 8px;
+      background: #333;
+      border-radius: 5px;
+    }
+    .msg strong {
+      color: #1e90ff;
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 8px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #1e90ff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <h2>Realtime Chat</h2>
+    <div id="messages"></div>
+    <input type="text" id="nickname" placeholder="Nickname" />
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button id="send">Send</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyCAPjGgsdgPwWhr7Z-CGn4T2FU0RH7Nelk",
+  authDomain: "mychat-e4a29.firebaseapp.com",
+  projectId: "mychat-e4a29",
+  storageBucket: "mychat-e4a29.firebasestorage.app",
+  messagingSenderId: "934281172090",
+  appId: "1:934281172090:web:b0c251d8a3785c5404d7c3"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const messagesRef = db.collection("messages");
+
+    const nicknameInput = document.getElementById("nickname");
+    const messageInput = document.getElementById("message");
+    const sendButton = document.getElementById("send");
+    const messagesDiv = document.getElementById("messages");
+
+    sendButton.onclick = async () => {
+      const nickname = nicknameInput.value.trim();
+      const message = messageInput.value.trim();
+      if (nickname && message) {
+        await messagesRef.add({
+          nickname,
+          message,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        messageInput.val
